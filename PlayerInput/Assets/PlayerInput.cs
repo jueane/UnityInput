@@ -3,34 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 
+// 与rewired的键位名字映射
 class InputActionName
 {
-    public const string TriggerLeft = "Grenade";
-    public const string TriggerRight = "Fire";
+    public const string TriggerLeft = "TriggerLeft";
+    public const string TriggerRight = "TriggerRight";
 
     public const string StickLeftX = "MoveX";
     public const string StickLeftY = "MoveY";
     public const string StickRighX = "LookX";
     public const string StickRighY = "LookY";
 
-    public const string StickButtonLeft = "Crouch";
-    public const string StickButtonRight = "Aim";
+    public const string StickButtonLeft = "StickButtonLeft";
+    public const string StickButtonRight = "StickButtonRight";
 
-    public const string BumperLeft = "Use";
-    public const string BumperRight = "Melee";
+    public const string BumperLeft = "BumperLeft";
+    public const string BumperRight = "BumperRight";
 
-    public const string Up = "Attack";
-    public const string Down = "Activate";
-    public const string Left = "Reload";
-    public const string Right = "Jump";
+    public const string Up = "Up";
+    public const string Down = "Down";
+    public const string Left = "Left";
+    public const string Right = "Right";
 
-    public const string DPadUp = "NextWeapon";
-    public const string DPadDown = "PrevWeapon";
-    public const string DPadLeft = "PrevGrenade";
-    public const string DPadRight = "NextGrenade";
+    public const string DPadUp = "DPadUp";
+    public const string DPadDown = "DPadDown";
+    public const string DPadLeft = "DPadLeft";
+    public const string DPadRight = "DPadRight";
 
-    public const string Back = "Inventory";
-    public const string Start = "Pause";
+    public const string Back = "Back";
+    public const string Start = "Start";
 }
 
 
@@ -148,6 +149,22 @@ public class PlayerInput : MonoBehaviour
 
         public static bool Back { get { return PlayerInput.playerRewired.GetButton(InputActionName.Back); } }
         public static bool Start { get { return PlayerInput.playerRewired.GetButton(InputActionName.Start); } }
+
+        public static Vector2 MouseScreenPostion
+        {
+            get
+            {
+                if (PlayerInput.playerRewired.controllers.hasMouse)
+                {
+                    return PlayerInput.playerRewired.controllers.Mouse.screenPosition;
+                }
+                else
+                {
+                    return Vector2.zero;
+                }
+
+            }
+        }
     }
 
 
