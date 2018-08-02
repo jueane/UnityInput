@@ -33,6 +33,7 @@ class InputActionName
     public const string Start = "Pause";
 }
 
+
 public enum EKeyAction
 {
     keyDown,
@@ -40,77 +41,121 @@ public enum EKeyAction
     keyUp
 }
 
+// callback signature
+public delegate void StickCallback(Vector2 vec);
+public delegate void TriggerCallback(float value);
+public delegate void KeyCallback();
+
 // 当前只把rewired当作获取源，如果将来rewired的Touch模块不可用，就把Rewired剥离出来，与移动端的Touch并列
 public class PlayerInput : MonoBehaviour
 {
-    public delegate void StickCallback(Vector2 vec);
-    public delegate void TriggerCallback(float value);
-    public delegate void KeyCallback();
-
     // stick
-    public event StickCallback stickLeft_Listener;
-    public event StickCallback stickRight_Listener;
+    event StickCallback stickLeft_Listener;
+    event StickCallback stickRight_Listener;
 
-    public event KeyCallback keyStickLeft_Listener_Down;
-    public event KeyCallback keyStickLeft_Listener_Pressing;
-    public event KeyCallback keyStickLeft_Listener_Up;
-    public event KeyCallback keyStickRight_Listener_Down;
-    public event KeyCallback keyStickRight_Listener_Pressing;
-    public event KeyCallback keyStickRight_Listener_Up;
+    event KeyCallback keyStickLeft_Listener_Down;
+    event KeyCallback keyStickLeft_Listener_Pressing;
+    event KeyCallback keyStickLeft_Listener_Up;
+    event KeyCallback keyStickRight_Listener_Down;
+    event KeyCallback keyStickRight_Listener_Pressing;
+    event KeyCallback keyStickRight_Listener_Up;
 
     // trigger
-    public event TriggerCallback triggerLeft_Listener;
-    public event TriggerCallback triggerRight_Listener;
+    event TriggerCallback triggerLeft_Listener;
+    event TriggerCallback triggerRight_Listener;
 
-    public event KeyCallback keyUp_Listener_Down;
-    public event KeyCallback keyUp_Listener_Pressing;
-    public event KeyCallback keyUp_Listener_Up;
-    public event KeyCallback keyDown_Listener_Down;
-    public event KeyCallback keyDown_Listener_Pressing;
-    public event KeyCallback keyDown_Listener_Up;
-    public event KeyCallback keyLeft_Listener_Down;
-    public event KeyCallback keyLeft_Listener_Pressing;
-    public event KeyCallback keyLeft_Listener_Up;
-    public event KeyCallback keyRight_Listener_Down;
-    public event KeyCallback keyRight_Listener_Pressing;
-    public event KeyCallback keyRight_Listener_Up;
+    event KeyCallback keyUp_Listener_Down;
+    event KeyCallback keyUp_Listener_Pressing;
+    event KeyCallback keyUp_Listener_Up;
+    event KeyCallback keyDown_Listener_Down;
+    event KeyCallback keyDown_Listener_Pressing;
+    event KeyCallback keyDown_Listener_Up;
+    event KeyCallback keyLeft_Listener_Down;
+    event KeyCallback keyLeft_Listener_Pressing;
+    event KeyCallback keyLeft_Listener_Up;
+    event KeyCallback keyRight_Listener_Down;
+    event KeyCallback keyRight_Listener_Pressing;
+    event KeyCallback keyRight_Listener_Up;
 
     // keys
-    public event KeyCallback keyPadUp_Listener_Down;
-    public event KeyCallback keyPadUp_Listener_Pressing;
-    public event KeyCallback keyPadUp_Listener_Up;
-    public event KeyCallback keyPadDown_Listener_Down;
-    public event KeyCallback keyPadDown_Listener_Pressing;
-    public event KeyCallback keyPadDown_Listener_Up;
-    public event KeyCallback keyPadLeft_Listener_Down;
-    public event KeyCallback keyPadLeft_Listener_Pressing;
-    public event KeyCallback keyPadLeft_Listener_Up;
-    public event KeyCallback keyPadRight_Listener_Down;
-    public event KeyCallback keyPadRight_Listener_Pressing;
-    public event KeyCallback keyPadRight_Listener_Up;
+    event KeyCallback keyPadUp_Listener_Down;
+    event KeyCallback keyPadUp_Listener_Pressing;
+    event KeyCallback keyPadUp_Listener_Up;
+    event KeyCallback keyPadDown_Listener_Down;
+    event KeyCallback keyPadDown_Listener_Pressing;
+    event KeyCallback keyPadDown_Listener_Up;
+    event KeyCallback keyPadLeft_Listener_Down;
+    event KeyCallback keyPadLeft_Listener_Pressing;
+    event KeyCallback keyPadLeft_Listener_Up;
+    event KeyCallback keyPadRight_Listener_Down;
+    event KeyCallback keyPadRight_Listener_Pressing;
+    event KeyCallback keyPadRight_Listener_Up;
 
     // back
-    public event KeyCallback keyBack_Listener_Down;
-    public event KeyCallback keyBack_Listener_Pressing;
-    public event KeyCallback keyBack_Listener_Up;
+    event KeyCallback keyBack_Listener_Down;
+    event KeyCallback keyBack_Listener_Pressing;
+    event KeyCallback keyBack_Listener_Up;
     // start
-    public event KeyCallback keyStart_Listener_Down;
-    public event KeyCallback keyStart_Listener_Pressing;
-    public event KeyCallback keyStart_Listener_Up;
+    event KeyCallback keyStart_Listener_Down;
+    event KeyCallback keyStart_Listener_Pressing;
+    event KeyCallback keyStart_Listener_Up;
 
     // bumper
-    public event KeyCallback bumperLeft_Listener_Down;
-    public event KeyCallback bumperLeft_Listener_Pressing;
-    public event KeyCallback bumperLeft_Listener_Up;
-    public event KeyCallback bumperRight_Listener_Down;
-    public event KeyCallback bumperRight_Listener_Pressing;
-    public event KeyCallback bumperRight_Listener_Up;
+    event KeyCallback bumperLeft_Listener_Down;
+    event KeyCallback bumperLeft_Listener_Pressing;
+    event KeyCallback bumperLeft_Listener_Up;
+    event KeyCallback bumperRight_Listener_Down;
+    event KeyCallback bumperRight_Listener_Pressing;
+    event KeyCallback bumperRight_Listener_Up;
+
+    // 全键
+    public struct AllKeys
+    {
+        public static Vector2 StickLeft
+        {
+            get
+            {
+                return new Vector2(playerRewired.GetAxis(InputActionName.StickLeftX), playerRewired.GetAxis(InputActionName.StickLeftY));
+            }
+        }
+
+        public static Vector2 StickRight
+        {
+            get
+            {
+                return new Vector2(playerRewired.GetAxis(InputActionName.StickRighX), playerRewired.GetAxis(InputActionName.StickRighY));
+            }
+        }
+
+        public static float TriggerLeft { get { return PlayerInput.playerRewired.GetAxis(InputActionName.TriggerLeft); } }
+        public static float TriggerRight { get { return PlayerInput.playerRewired.GetAxis(InputActionName.TriggerRight); } }
+
+        public static bool StickButtonLeft { get { return PlayerInput.playerRewired.GetButton(InputActionName.StickButtonLeft); } }
+        public static bool StickButtonRight { get { return PlayerInput.playerRewired.GetButton(InputActionName.StickButtonRight); } }
+
+        public static bool BumperLeft { get { return PlayerInput.playerRewired.GetButton(InputActionName.BumperLeft); } }
+        public static bool BumperRight { get { return PlayerInput.playerRewired.GetButton(InputActionName.BumperRight); } }
+
+        public static bool Up { get { return PlayerInput.playerRewired.GetButton(InputActionName.Up); } }
+        public static bool Down { get { return PlayerInput.playerRewired.GetButton(InputActionName.Down); } }
+        public static bool Left { get { return PlayerInput.playerRewired.GetButton(InputActionName.Left); } }
+        public static bool Right { get { return PlayerInput.playerRewired.GetButton(InputActionName.Right); } }
+
+        public static bool DPadUp { get { return PlayerInput.playerRewired.GetButton(InputActionName.DPadUp); } }
+        public static bool DPadDown { get { return PlayerInput.playerRewired.GetButton(InputActionName.DPadDown); } }
+        public static bool DPadLeft { get { return PlayerInput.playerRewired.GetButton(InputActionName.DPadLeft); } }
+        public static bool DPadRight { get { return PlayerInput.playerRewired.GetButton(InputActionName.DPadRight); } }
+
+        public static bool Back { get { return PlayerInput.playerRewired.GetButton(InputActionName.Back); } }
+        public static bool Start { get { return PlayerInput.playerRewired.GetButton(InputActionName.Start); } }
+    }
+
 
     static PlayerInput pi;
 
-    Player playerRewired;
+    public static bool available;
 
-    public bool available;
+    static Player playerRewired;
 
     // Use this for initialization
     void Start()
@@ -130,17 +175,20 @@ public class PlayerInput : MonoBehaviour
         if (stickLeft_Listener != null)
         {
             var moveaxis = new Vector2(playerRewired.GetAxis(InputActionName.StickLeftX), playerRewired.GetAxis(InputActionName.StickLeftY));
+            // all.StickLeft = moveaxis;
             stickLeft_Listener(moveaxis);
         }
         if (stickRight_Listener != null)
         {
             var moveaxis = new Vector2(playerRewired.GetAxis(InputActionName.StickRighX), playerRewired.GetAxis(InputActionName.StickRighY));
+            // all.StickRight = moveaxis;
             stickRight_Listener(moveaxis);
         }
 
         // stick key left
         if (keyStickLeft_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.StickButtonLeft))
         {
+            // all.StickButtonLeft = true;
             keyStickLeft_Listener_Down();
         }
         if (keyStickLeft_Listener_Pressing != null && playerRewired.GetButton(InputActionName.StickButtonLeft))
@@ -321,7 +369,7 @@ public class PlayerInput : MonoBehaviour
         if (keyBack_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.Back))
         {
             keyBack_Listener_Up();
-        }        
+        }
         // key start
         if (keyStart_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.Start))
         {

@@ -47,6 +47,10 @@ namespace Gameplay
             PlayerInput.ListenKeyDown(OnKeyDown, EKeyAction.keyDown);
             PlayerInput.ListenKeyLeft(OnKeyLeft, EKeyAction.keyDown);
             PlayerInput.ListenKeyRight(OnKeyRight, EKeyAction.keyDown);
+
+
+
+
         }
 
         int lastCountJoys = 0;
@@ -54,6 +58,9 @@ namespace Gameplay
         // Update is called once per frame
         void Update()
         {
+            if (Time.frameCount % 100 == 0)
+                tx4.text = PlayerInput.AllKeys.TriggerLeft.ToString();
+
         }
 
         void OnMove(Vector2 vec)
