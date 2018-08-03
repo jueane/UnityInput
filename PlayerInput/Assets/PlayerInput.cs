@@ -50,6 +50,8 @@ public delegate void KeyCallback();
 // 当前只把rewired当作获取源，如果将来rewired的Touch模块不可用，就把Rewired剥离出来，与移动端的Touch并列
 public class PlayerInput : MonoBehaviour
 {
+    const float DEAD_ZONE = 0.3f;
+
     // stick
     event StickCallback stickLeft_Listener;
     event StickCallback stickRight_Listener;
@@ -191,21 +193,24 @@ public class PlayerInput : MonoBehaviour
         // stick
         if (stickLeft_Listener != null)
         {
-            var moveaxis = new Vector2(playerRewired.GetAxis(InputActionName.StickLeftX), playerRewired.GetAxis(InputActionName.StickLeftY));
-            // all.StickLeft = moveaxis;
-            stickLeft_Listener(moveaxis);
+            var x = playerRewired.GetAxis(InputActionName.StickLeftX);
+            var y = playerRewired.GetAxis(InputActionName.StickLeftY);
+            x = (x > -DEAD_ZONE && x < DEAD_ZONE) ? 0 : x;
+            y = (y > -DEAD_ZONE && y < DEAD_ZONE) ? 0 : y;
+            stickLeft_Listener(new Vector2(x, y));
         }
         if (stickRight_Listener != null)
         {
-            var moveaxis = new Vector2(playerRewired.GetAxis(InputActionName.StickRighX), playerRewired.GetAxis(InputActionName.StickRighY));
-            // all.StickRight = moveaxis;
-            stickRight_Listener(moveaxis);
+            var x = playerRewired.GetAxis(InputActionName.StickRighX);
+            var y = playerRewired.GetAxis(InputActionName.StickRighY);
+            x = (x > -DEAD_ZONE && x < DEAD_ZONE) ? 0 : x;
+            y = (y > -DEAD_ZONE && y < DEAD_ZONE) ? 0 : y;
+            stickRight_Listener(new Vector2(x, y));
         }
 
         // stick key left
         if (keyStickLeft_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.StickButtonLeft))
         {
-            // all.StickButtonLeft = true;
             keyStickLeft_Listener_Down();
         }
         if (keyStickLeft_Listener_Pressing != null && playerRewired.GetButton(InputActionName.StickButtonLeft))

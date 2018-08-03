@@ -61,7 +61,6 @@ namespace Gameplay
             if (Time.frameCount % 100 == 0)
                 tx4.text = PlayerInput.AllKeys.TriggerLeft.ToString();
             Vector2 a = PlayerInput.AllKeys.MouseScreenPostion;
-            Debug.Log("mouse:" + a);
         }
 
         void OnMove(Vector2 vec)

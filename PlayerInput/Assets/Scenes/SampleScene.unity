@@ -2912,6 +2912,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 114331900006295448, guid: b0cbf3c3a79662e46a6cc6ae38ada97d,
+        type: 2}
+      propertyPath: _userData.inputBehaviors.Array.data[0]._digitalAxisSimulation
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b0cbf3c3a79662e46a6cc6ae38ada97d, type: 2}
   m_IsPrefabAsset: 0

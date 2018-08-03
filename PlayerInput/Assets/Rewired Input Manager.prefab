@@ -389,7 +389,7 @@ MonoBehaviour:
     - _id: 0
       _name: Default
       _joystickAxisSensitivity: 1
-      _digitalAxisSimulation: 1
+      _digitalAxisSimulation: 0
       _digitalAxisSnap: 1
       _digitalAxisInstantReverse: 0
       _digitalAxisGravity: 3
@@ -720,12 +720,12 @@ MonoBehaviour:
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
-        _keyboardKeyCode: 49
+        _keyboardKeyCode: 304
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 18
+        _actionId: -1
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -835,7 +835,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 10
+        _actionId: -1
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -898,7 +898,7 @@ MonoBehaviour:
       customControllerUid: 0
       actionElementMaps:
       - _actionCategoryId: 0
-        _actionId: 3
+        _actionId: 2
         _elementType: 1
         _elementIdentifierId: 3
         _axisRange: 0
@@ -909,7 +909,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 19
+        _actionId: 18
         _elementType: 1
         _elementIdentifierId: 4
         _axisRange: 0
