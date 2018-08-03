@@ -169,7 +169,6 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-
     static PlayerInput pi;
 
     public static bool available;
