@@ -111,14 +111,14 @@ public class PlayerInput : MonoBehaviour
     event KeyCallback bumperRight_Listener_Pressing;
     event KeyCallback bumperRight_Listener_Up;
 
-    // 全键
+    // 所有键状态查询
     public struct AllKeys
     {
         public static Vector2 StickLeft
         {
             get
             {
-                return new Vector2(playerRewired.GetAxis(InputActionName.StickLeftX), playerRewired.GetAxis(InputActionName.StickLeftY));
+                return new Vector2(rewired.GetAxis(InputActionName.StickLeftX), rewired.GetAxis(InputActionName.StickLeftY));
             }
         }
 
@@ -126,63 +126,62 @@ public class PlayerInput : MonoBehaviour
         {
             get
             {
-                return new Vector2(playerRewired.GetAxis(InputActionName.StickRighX), playerRewired.GetAxis(InputActionName.StickRighY));
+                return new Vector2(rewired.GetAxis(InputActionName.StickRighX), rewired.GetAxis(InputActionName.StickRighY));
             }
         }
 
-        public static float TriggerLeft { get { return PlayerInput.playerRewired.GetAxis(InputActionName.TriggerLeft); } }
-        public static float TriggerRight { get { return PlayerInput.playerRewired.GetAxis(InputActionName.TriggerRight); } }
+        public static float TriggerLeft { get { return rewired.GetAxis(InputActionName.TriggerLeft); } }
+        public static float TriggerRight { get { return rewired.GetAxis(InputActionName.TriggerRight); } }
 
-        public static bool StickButtonLeft { get { return PlayerInput.playerRewired.GetButton(InputActionName.StickButtonLeft); } }
-        public static bool StickButtonRight { get { return PlayerInput.playerRewired.GetButton(InputActionName.StickButtonRight); } }
+        public static bool StickButtonLeft { get { return rewired.GetButton(InputActionName.StickButtonLeft); } }
+        public static bool StickButtonRight { get { return rewired.GetButton(InputActionName.StickButtonRight); } }
 
-        public static bool BumperLeft { get { return PlayerInput.playerRewired.GetButton(InputActionName.BumperLeft); } }
-        public static bool BumperRight { get { return PlayerInput.playerRewired.GetButton(InputActionName.BumperRight); } }
+        public static bool BumperLeft { get { return rewired.GetButton(InputActionName.BumperLeft); } }
+        public static bool BumperRight { get { return rewired.GetButton(InputActionName.BumperRight); } }
 
-        public static bool Up { get { return PlayerInput.playerRewired.GetButton(InputActionName.Up); } }
-        public static bool Down { get { return PlayerInput.playerRewired.GetButton(InputActionName.Down); } }
-        public static bool Left { get { return PlayerInput.playerRewired.GetButton(InputActionName.Left); } }
-        public static bool Right { get { return PlayerInput.playerRewired.GetButton(InputActionName.Right); } }
+        public static bool Up { get { return rewired.GetButton(InputActionName.Up); } }
+        public static bool Down { get { return rewired.GetButton(InputActionName.Down); } }
+        public static bool Left { get { return rewired.GetButton(InputActionName.Left); } }
+        public static bool Right { get { return rewired.GetButton(InputActionName.Right); } }
 
-        public static bool DPadUp { get { return PlayerInput.playerRewired.GetButton(InputActionName.DPadUp); } }
-        public static bool DPadDown { get { return PlayerInput.playerRewired.GetButton(InputActionName.DPadDown); } }
-        public static bool DPadLeft { get { return PlayerInput.playerRewired.GetButton(InputActionName.DPadLeft); } }
-        public static bool DPadRight { get { return PlayerInput.playerRewired.GetButton(InputActionName.DPadRight); } }
+        public static bool DPadUp { get { return rewired.GetButton(InputActionName.DPadUp); } }
+        public static bool DPadDown { get { return rewired.GetButton(InputActionName.DPadDown); } }
+        public static bool DPadLeft { get { return rewired.GetButton(InputActionName.DPadLeft); } }
+        public static bool DPadRight { get { return rewired.GetButton(InputActionName.DPadRight); } }
 
-        public static bool Back { get { return PlayerInput.playerRewired.GetButton(InputActionName.Back); } }
-        public static bool Start { get { return PlayerInput.playerRewired.GetButton(InputActionName.Start); } }
+        public static bool Back { get { return rewired.GetButton(InputActionName.Back); } }
+        public static bool Start { get { return rewired.GetButton(InputActionName.Start); } }
 
         public static Vector2 MouseScreenPostion
         {
             get
             {
-                if (PlayerInput.playerRewired.controllers.hasMouse)
+                if (rewired.controllers.hasMouse)
                 {
-                    return PlayerInput.playerRewired.controllers.Mouse.screenPosition;
+                    return rewired.controllers.Mouse.screenPosition;
                 }
                 else
                 {
                     return Vector2.zero;
                 }
-
             }
         }
     }
 
-    static PlayerInput pi;
+    static PlayerInput instance;
 
     public static bool available;
 
-    static Player playerRewired;
+    static Player rewired;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
-        playerRewired = ReInput.players.GetPlayer(0);
+        rewired = ReInput.players.GetPlayer(0);
 
-        if (pi == null)
+        if (instance == null)
         {
-            pi = this;
+            instance = this;
         }
     }
 
@@ -192,45 +191,45 @@ public class PlayerInput : MonoBehaviour
         // stick
         if (stickLeft_Listener != null)
         {
-            var x = playerRewired.GetAxis(InputActionName.StickLeftX);
-            var y = playerRewired.GetAxis(InputActionName.StickLeftY);
+            var x = rewired.GetAxis(InputActionName.StickLeftX);
+            var y = rewired.GetAxis(InputActionName.StickLeftY);
             x = (x > -DEAD_ZONE && x < DEAD_ZONE) ? 0 : x;
             y = (y > -DEAD_ZONE && y < DEAD_ZONE) ? 0 : y;
             stickLeft_Listener(new Vector2(x, y));
         }
         if (stickRight_Listener != null)
         {
-            var x = playerRewired.GetAxis(InputActionName.StickRighX);
-            var y = playerRewired.GetAxis(InputActionName.StickRighY);
+            var x = rewired.GetAxis(InputActionName.StickRighX);
+            var y = rewired.GetAxis(InputActionName.StickRighY);
             x = (x > -DEAD_ZONE && x < DEAD_ZONE) ? 0 : x;
             y = (y > -DEAD_ZONE && y < DEAD_ZONE) ? 0 : y;
             stickRight_Listener(new Vector2(x, y));
         }
 
         // stick key left
-        if (keyStickLeft_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.StickButtonLeft))
+        if (keyStickLeft_Listener_Down != null && rewired.GetButtonDown(InputActionName.StickButtonLeft))
         {
             keyStickLeft_Listener_Down();
         }
-        if (keyStickLeft_Listener_Pressing != null && playerRewired.GetButton(InputActionName.StickButtonLeft))
+        if (keyStickLeft_Listener_Pressing != null && rewired.GetButton(InputActionName.StickButtonLeft))
         {
             keyStickLeft_Listener_Pressing();
         }
-        if (keyStickLeft_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.StickButtonLeft))
+        if (keyStickLeft_Listener_Up != null && rewired.GetButtonUp(InputActionName.StickButtonLeft))
         {
             keyStickLeft_Listener_Up();
         }
 
         // stick key right
-        if (keyStickRight_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.StickButtonRight))
+        if (keyStickRight_Listener_Down != null && rewired.GetButtonDown(InputActionName.StickButtonRight))
         {
             keyStickLeft_Listener_Down();
         }
-        if (keyStickRight_Listener_Pressing != null && playerRewired.GetButton(InputActionName.StickButtonRight))
+        if (keyStickRight_Listener_Pressing != null && rewired.GetButton(InputActionName.StickButtonRight))
         {
             keyStickRight_Listener_Pressing();
         }
-        if (keyStickRight_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.StickButtonRight))
+        if (keyStickRight_Listener_Up != null && rewired.GetButtonUp(InputActionName.StickButtonRight))
         {
             keyStickRight_Listener_Up();
         }
@@ -238,169 +237,169 @@ public class PlayerInput : MonoBehaviour
         // trigger
         if (triggerLeft_Listener != null)
         {
-            triggerLeft_Listener(playerRewired.GetAxis(InputActionName.TriggerLeft));
+            triggerLeft_Listener(rewired.GetAxis(InputActionName.TriggerLeft));
         }
         if (triggerRight_Listener != null)
         {
-            triggerRight_Listener(playerRewired.GetAxis(InputActionName.TriggerRight));
+            triggerRight_Listener(rewired.GetAxis(InputActionName.TriggerRight));
         }
 
         // bumper left
-        if (bumperLeft_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.BumperLeft))
+        if (bumperLeft_Listener_Down != null && rewired.GetButtonDown(InputActionName.BumperLeft))
         {
             bumperLeft_Listener_Down();
         }
-        if (bumperLeft_Listener_Pressing != null && playerRewired.GetButton(InputActionName.BumperLeft))
+        if (bumperLeft_Listener_Pressing != null && rewired.GetButton(InputActionName.BumperLeft))
         {
             bumperLeft_Listener_Pressing();
         }
-        if (bumperLeft_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.BumperLeft))
+        if (bumperLeft_Listener_Up != null && rewired.GetButtonUp(InputActionName.BumperLeft))
         {
             bumperLeft_Listener_Up();
         }
         // bumper right
-        if (bumperRight_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.BumperRight))
+        if (bumperRight_Listener_Down != null && rewired.GetButtonDown(InputActionName.BumperRight))
         {
             bumperLeft_Listener_Down();
         }
-        if (bumperRight_Listener_Pressing != null && playerRewired.GetButton(InputActionName.BumperRight))
+        if (bumperRight_Listener_Pressing != null && rewired.GetButton(InputActionName.BumperRight))
         {
             bumperLeft_Listener_Pressing();
         }
-        if (bumperRight_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.BumperRight))
+        if (bumperRight_Listener_Up != null && rewired.GetButtonUp(InputActionName.BumperRight))
         {
             bumperLeft_Listener_Up();
         }
 
         // DPad up
-        if (keyPadUp_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.DPadUp))
+        if (keyPadUp_Listener_Down != null && rewired.GetButtonDown(InputActionName.DPadUp))
         {
             keyPadUp_Listener_Down();
         }
-        if (keyPadUp_Listener_Pressing != null && playerRewired.GetButton(InputActionName.DPadUp))
+        if (keyPadUp_Listener_Pressing != null && rewired.GetButton(InputActionName.DPadUp))
         {
             keyPadUp_Listener_Pressing();
         }
-        if (keyPadUp_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.DPadUp))
+        if (keyPadUp_Listener_Up != null && rewired.GetButtonUp(InputActionName.DPadUp))
         {
             keyPadUp_Listener_Up();
         }
         // DPad down
-        if (keyPadDown_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.DPadDown))
+        if (keyPadDown_Listener_Down != null && rewired.GetButtonDown(InputActionName.DPadDown))
         {
             keyPadDown_Listener_Down();
         }
-        if (keyPadDown_Listener_Pressing != null && playerRewired.GetButton(InputActionName.DPadDown))
+        if (keyPadDown_Listener_Pressing != null && rewired.GetButton(InputActionName.DPadDown))
         {
             keyPadDown_Listener_Pressing();
         }
-        if (keyPadDown_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.DPadDown))
+        if (keyPadDown_Listener_Up != null && rewired.GetButtonUp(InputActionName.DPadDown))
         {
             keyPadDown_Listener_Up();
         }
         // DPad left
-        if (keyPadLeft_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.DPadLeft))
+        if (keyPadLeft_Listener_Down != null && rewired.GetButtonDown(InputActionName.DPadLeft))
         {
             keyPadLeft_Listener_Down();
         }
-        if (keyPadLeft_Listener_Pressing != null && playerRewired.GetButton(InputActionName.DPadLeft))
+        if (keyPadLeft_Listener_Pressing != null && rewired.GetButton(InputActionName.DPadLeft))
         {
             keyPadLeft_Listener_Pressing();
         }
-        if (keyPadLeft_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.DPadLeft))
+        if (keyPadLeft_Listener_Up != null && rewired.GetButtonUp(InputActionName.DPadLeft))
         {
             keyPadLeft_Listener_Up();
         }
         // DPad right
-        if (keyPadRight_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.DPadRight))
+        if (keyPadRight_Listener_Down != null && rewired.GetButtonDown(InputActionName.DPadRight))
         {
             keyPadRight_Listener_Down();
         }
-        if (keyPadRight_Listener_Pressing != null && playerRewired.GetButton(InputActionName.DPadRight))
+        if (keyPadRight_Listener_Pressing != null && rewired.GetButton(InputActionName.DPadRight))
         {
             keyPadRight_Listener_Pressing();
         }
-        if (keyPadRight_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.DPadRight))
+        if (keyPadRight_Listener_Up != null && rewired.GetButtonUp(InputActionName.DPadRight))
         {
             keyPadRight_Listener_Up();
         }
 
         // key up
-        if (keyUp_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.Up))
+        if (keyUp_Listener_Down != null && rewired.GetButtonDown(InputActionName.Up))
         {
             keyUp_Listener_Down();
         }
-        if (keyUp_Listener_Pressing != null && playerRewired.GetButton(InputActionName.Up))
+        if (keyUp_Listener_Pressing != null && rewired.GetButton(InputActionName.Up))
         {
             keyUp_Listener_Pressing();
         }
-        if (keyUp_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.Up))
+        if (keyUp_Listener_Up != null && rewired.GetButtonUp(InputActionName.Up))
         {
             keyUp_Listener_Up();
         }
         // key down
-        if (keyDown_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.Down))
+        if (keyDown_Listener_Down != null && rewired.GetButtonDown(InputActionName.Down))
         {
             keyDown_Listener_Down();
         }
-        if (keyDown_Listener_Pressing != null && playerRewired.GetButton(InputActionName.Down))
+        if (keyDown_Listener_Pressing != null && rewired.GetButton(InputActionName.Down))
         {
             keyDown_Listener_Pressing();
         }
-        if (keyDown_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.Down))
+        if (keyDown_Listener_Up != null && rewired.GetButtonUp(InputActionName.Down))
         {
             keyDown_Listener_Up();
         }
         // key left
-        if (keyLeft_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.Left))
+        if (keyLeft_Listener_Down != null && rewired.GetButtonDown(InputActionName.Left))
         {
             keyLeft_Listener_Down();
         }
-        if (keyLeft_Listener_Pressing != null && playerRewired.GetButton(InputActionName.Left))
+        if (keyLeft_Listener_Pressing != null && rewired.GetButton(InputActionName.Left))
         {
             keyLeft_Listener_Pressing();
         }
-        if (keyLeft_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.Left))
+        if (keyLeft_Listener_Up != null && rewired.GetButtonUp(InputActionName.Left))
         {
             keyLeft_Listener_Up();
         }
         // key right
-        if (keyRight_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.Right))
+        if (keyRight_Listener_Down != null && rewired.GetButtonDown(InputActionName.Right))
         {
             keyRight_Listener_Down();
         }
-        if (keyRight_Listener_Pressing != null && playerRewired.GetButton(InputActionName.Right))
+        if (keyRight_Listener_Pressing != null && rewired.GetButton(InputActionName.Right))
         {
             keyRight_Listener_Pressing();
         }
-        if (keyRight_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.Right))
+        if (keyRight_Listener_Up != null && rewired.GetButtonUp(InputActionName.Right))
         {
             keyRight_Listener_Up();
         }
 
         // key back
-        if (keyBack_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.Back))
+        if (keyBack_Listener_Down != null && rewired.GetButtonDown(InputActionName.Back))
         {
             keyBack_Listener_Down();
         }
-        if (keyBack_Listener_Pressing != null && playerRewired.GetButton(InputActionName.Back))
+        if (keyBack_Listener_Pressing != null && rewired.GetButton(InputActionName.Back))
         {
             keyBack_Listener_Pressing();
         }
-        if (keyBack_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.Back))
+        if (keyBack_Listener_Up != null && rewired.GetButtonUp(InputActionName.Back))
         {
             keyBack_Listener_Up();
         }
         // key start
-        if (keyStart_Listener_Down != null && playerRewired.GetButtonDown(InputActionName.Start))
+        if (keyStart_Listener_Down != null && rewired.GetButtonDown(InputActionName.Start))
         {
             keyStart_Listener_Down();
         }
-        if (keyStart_Listener_Pressing != null && playerRewired.GetButton(InputActionName.Start))
+        if (keyStart_Listener_Pressing != null && rewired.GetButton(InputActionName.Start))
         {
             keyStart_Listener_Pressing();
         }
-        if (keyStart_Listener_Up != null && playerRewired.GetButtonUp(InputActionName.Start))
+        if (keyStart_Listener_Up != null && rewired.GetButtonUp(InputActionName.Start))
         {
             keyStart_Listener_Up();
         }
@@ -409,37 +408,37 @@ public class PlayerInput : MonoBehaviour
     // stick left
     public static void ListenStickLeft(StickCallback cb)
     {
-        pi.stickLeft_Listener += cb;
+        instance.stickLeft_Listener += cb;
     }
     // stick right
     public static void ListenStickRight(StickCallback cb)
     {
-        pi.stickRight_Listener += cb;
+        instance.stickRight_Listener += cb;
     }
     // trigger left
     public static void ListenTriggerLeft(TriggerCallback cb)
     {
-        pi.triggerLeft_Listener += cb;
+        instance.triggerLeft_Listener += cb;
     }
     // trigger right
     public static void ListenTriggerRight(TriggerCallback cb)
     {
-        pi.triggerRight_Listener += cb;
+        instance.triggerRight_Listener += cb;
     }
     // bumper left
     public static void ListenBumperLeft(KeyCallback cb, EKeyAction eAct)
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.bumperLeft_Listener_Down += cb;
+            instance.bumperLeft_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.bumperLeft_Listener_Pressing += cb;
+            instance.bumperLeft_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.bumperLeft_Listener_Down += cb;
+            instance.bumperLeft_Listener_Down += cb;
         }
     }
     // bumper right
@@ -447,15 +446,15 @@ public class PlayerInput : MonoBehaviour
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.bumperRight_Listener_Down += cb;
+            instance.bumperRight_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.bumperRight_Listener_Pressing += cb;
+            instance.bumperRight_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.bumperRight_Listener_Up += cb;
+            instance.bumperRight_Listener_Up += cb;
         }
     }
     // pad
@@ -463,57 +462,60 @@ public class PlayerInput : MonoBehaviour
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyPadUp_Listener_Down += cb;
+            instance.keyPadUp_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyPadUp_Listener_Pressing += cb;
+            instance.keyPadUp_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyPadUp_Listener_Up += cb;
+            instance.keyPadUp_Listener_Up += cb;
         }
     }
     public static void ListenKeyPadDown(KeyCallback cb, EKeyAction eAct)
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyPadDown_Listener_Down += cb;
+            instance.keyPadDown_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyPadDown_Listener_Pressing += cb;
+            instance.keyPadDown_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyPadDown_Listener_Up += cb;
+            instance.keyPadDown_Listener_Up += cb;
         }
     }
     public static void ListenKeyPadLeft(KeyCallback cb, EKeyAction eAct)
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyPadLeft_Listener_Down += cb;
+            instance.keyPadLeft_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyPadLeft_Listener_Pressing += cb;
+            instance.keyPadLeft_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyPadLeft_Listener_Up += cb;
+            instance.keyPadLeft_Listener_Up += cb;
         }
     }
     public static void ListenKeyPadRight(KeyCallback cb, EKeyAction eAct)
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
+            instance.keyPadRight_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
+            instance.keyPadRight_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
+            instance.keyRight_Listener_Up += cb;
         }
     }
     // directions
@@ -521,60 +523,60 @@ public class PlayerInput : MonoBehaviour
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyUp_Listener_Down += cb;
+            instance.keyUp_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyUp_Listener_Pressing += cb;
+            instance.keyUp_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyUp_Listener_Up += cb;
+            instance.keyUp_Listener_Up += cb;
         }
     }
     public static void ListenKeyDown(KeyCallback cb, EKeyAction eAct)
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyDown_Listener_Down += cb;
+            instance.keyDown_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyDown_Listener_Pressing += cb;
+            instance.keyDown_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyDown_Listener_Up += cb;
+            instance.keyDown_Listener_Up += cb;
         }
     }
     public static void ListenKeyLeft(KeyCallback cb, EKeyAction eAct)
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyLeft_Listener_Down += cb;
+            instance.keyLeft_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyLeft_Listener_Pressing += cb;
+            instance.keyLeft_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyLeft_Listener_Up += cb;
+            instance.keyLeft_Listener_Up += cb;
         }
     }
     public static void ListenKeyRight(KeyCallback cb, EKeyAction eAct)
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyRight_Listener_Down += cb;
+            instance.keyRight_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyRight_Listener_Pressing += cb;
+            instance.keyRight_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyRight_Listener_Up += cb;
+            instance.keyRight_Listener_Up += cb;
         }
     }
 
@@ -583,30 +585,30 @@ public class PlayerInput : MonoBehaviour
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyBack_Listener_Down();
+            instance.keyBack_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyBack_Listener_Pressing();
+            instance.keyBack_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyBack_Listener_Up();
+            instance.keyBack_Listener_Up += cb;
         }
     }
     public static void ListenKeyStart(KeyCallback cb, EKeyAction eAct)
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyStart_Listener_Down();
+            instance.keyStart_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyStart_Listener_Pressing();
+            instance.keyStart_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyStart_Listener_Up();
+            instance.keyStart_Listener_Up += cb;
         }
     }
     // stick key    
@@ -614,30 +616,30 @@ public class PlayerInput : MonoBehaviour
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyStickLeft_Listener_Down();
+            instance.keyStickLeft_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyStickLeft_Listener_Pressing();
+            instance.keyStickLeft_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyStickLeft_Listener_Up();
+            instance.keyStickLeft_Listener_Up += cb;
         }
     }
     public static void ListenKeyStickRight(KeyCallback cb, EKeyAction eAct)
     {
         if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
         {
-            pi.keyStickRight_Listener_Down();
+            instance.keyStickRight_Listener_Down += cb;
         }
         if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
         {
-            pi.keyStickRight_Listener_Pressing();
+            instance.keyStickRight_Listener_Pressing += cb;
         }
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
-            pi.keyStickRight_Listener_Up();
+            instance.keyStickRight_Listener_Up += cb;
         }
     }
 }
