@@ -11,8 +11,8 @@ namespace Gameplay
     {
         public Text tx1;
         public Text tx2;
-        public Text tx3;
-        public Text tx4;
+        public Text LT;
+        public Text RT;
         public Text tg1;
 
         public Text tx5;
@@ -58,8 +58,8 @@ namespace Gameplay
         // Update is called once per frame
         void Update()
         {
-            if (Time.frameCount % 100 == 0)
-                tx4.text = PlayerInput.AllKeys.TriggerLeft.ToString();
+            // if (Time.frameCount % 100 == 0)
+            //     tx4.text = PlayerInput.AllKeys.TriggerLeft.ToString();
             Vector2 a = PlayerInput.AllKeys.MouseScreenPostion;
         }
 
@@ -74,11 +74,12 @@ namespace Gameplay
 
         void OnTriggerLeft(float a)
         {
-            tx3.text = "trigger left: " + a;
+            LT.text = "trigger left: " + a;
         }
 
         void OnTriggerRight(float a)
         {
+            RT.text = "trigger left: " + a;
         }
 
         void OnKeyAPress()
