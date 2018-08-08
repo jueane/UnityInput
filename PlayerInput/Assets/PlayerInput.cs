@@ -32,6 +32,9 @@ class InputActionName
 
     public const string Back = "Back";
     public const string Start = "Start";
+
+    public const string MouseButtonLeft = "MouseButtonLeft";
+    public const string MouseButtonRight = "MouseButtonRight";
 }
 
 
@@ -111,6 +114,14 @@ public class PlayerInput : MonoBehaviour
     event KeyCallback bumperRight_Listener_Pressing;
     event KeyCallback bumperRight_Listener_Up;
 
+    // mouse
+    event KeyCallback keyMouseLeft_Listener_Down;
+    event KeyCallback keyMouseLeft_Listener_Pressing;
+    event KeyCallback keyMouseLeft_Listener_Up;
+    event KeyCallback keyMouseRight_Listener_Down;
+    event KeyCallback keyMouseRight_Listener_Pressing;
+    event KeyCallback keyMouseRight_Listener_Up;
+
     // 所有键状态查询
     public struct AllKeys
     {
@@ -152,6 +163,9 @@ public class PlayerInput : MonoBehaviour
         public static bool Back { get { return rewired.GetButton(InputActionName.Back); } }
         public static bool Start { get { return rewired.GetButton(InputActionName.Start); } }
 
+        public static bool MouseLeft { get { return rewired.GetButton(InputActionName.MouseButtonLeft); } }
+        public static bool MouseRight { get { return rewired.GetButton(InputActionName.MouseButtonRight); } }
+
         public static Vector2 MouseScreenPostion
         {
             get
@@ -179,10 +193,7 @@ public class PlayerInput : MonoBehaviour
     {
         rewired = ReInput.players.GetPlayer(0);
 
-        if (instance == null)
-        {
-            instance = this;
-        }
+        instance = this;
     }
 
     // Update is called once per frame
@@ -402,6 +413,32 @@ public class PlayerInput : MonoBehaviour
         if (keyStart_Listener_Up != null && rewired.GetButtonUp(InputActionName.Start))
         {
             keyStart_Listener_Up();
+        }
+        // key mouse left
+        if (keyMouseLeft_Listener_Down != null && rewired.GetButtonDown(InputActionName.MouseButtonLeft))
+        {
+            keyMouseLeft_Listener_Down();
+        }
+        if (keyMouseLeft_Listener_Pressing != null && rewired.GetButton(InputActionName.MouseButtonLeft))
+        {
+            keyMouseLeft_Listener_Pressing();
+        }
+        if (keyMouseLeft_Listener_Up != null && rewired.GetButtonUp(InputActionName.MouseButtonLeft))
+        {
+            keyMouseLeft_Listener_Up();
+        }
+        // key mouse right
+        if (keyMouseRight_Listener_Down != null && rewired.GetButtonDown(InputActionName.MouseButtonRight))
+        {
+            keyMouseRight_Listener_Down();
+        }
+        if (keyMouseRight_Listener_Pressing != null && rewired.GetButton(InputActionName.MouseButtonRight))
+        {
+            keyMouseRight_Listener_Pressing();
+        }
+        if (keyMouseRight_Listener_Up != null && rewired.GetButtonUp(InputActionName.MouseButtonRight))
+        {
+            keyMouseRight_Listener_Up();
         }
     }
 
@@ -640,6 +677,38 @@ public class PlayerInput : MonoBehaviour
         if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
         {
             instance.keyStickRight_Listener_Up += cb;
+        }
+    }
+
+    // mouse listen
+    public static void ListenKeyMouseLeft(KeyCallback cb, EKeyAction eAct)
+    {
+        if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
+        {
+            instance.keyMouseLeft_Listener_Down += cb;
+        }
+        if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
+        {
+            instance.keyMouseLeft_Listener_Pressing += cb;
+        }
+        if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
+        {
+            instance.keyMouseLeft_Listener_Up += cb;
+        }
+    }
+    public static void ListenKeyMouseRight(KeyCallback cb, EKeyAction eAct)
+    {
+        if ((eAct & EKeyAction.keyDown) == EKeyAction.keyDown)
+        {
+            instance.keyMouseRight_Listener_Down += cb;
+        }
+        if ((eAct & EKeyAction.keyPressing) == EKeyAction.keyPressing)
+        {
+            instance.keyMouseRight_Listener_Pressing += cb;
+        }
+        if ((eAct & EKeyAction.keyUp) == EKeyAction.keyUp)
+        {
+            instance.keyMouseRight_Listener_Up += cb;
         }
     }
 }

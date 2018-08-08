@@ -29,13 +29,9 @@ namespace Gameplay
 
         public Text joyList;
 
-        Player player;
-
         // Use this for initialization
         void Start()
         {
-            player = ReInput.players.GetPlayer(0);
-
             PlayerInput.ListenStickLeft(OnMove);
             PlayerInput.ListenStickRight(OnLook);
 
@@ -48,7 +44,8 @@ namespace Gameplay
             PlayerInput.ListenKeyLeft(OnKeyLeft, EKeyAction.keyDown);
             PlayerInput.ListenKeyRight(OnKeyRight, EKeyAction.keyDown);
 
-
+            PlayerInput.ListenKeyMouseLeft(OnMouseLeft, EKeyAction.keyDown);
+            PlayerInput.ListenKeyMouseRight(OnMouseRight, EKeyAction.keyDown);
 
 
         }
@@ -61,6 +58,16 @@ namespace Gameplay
             // if (Time.frameCount % 100 == 0)
             //     tx4.text = PlayerInput.AllKeys.TriggerLeft.ToString();
             Vector2 a = PlayerInput.AllKeys.MouseScreenPostion;
+        }
+
+        void OnMouseLeft()
+        {
+            print("mouse 1");
+        }
+
+        void OnMouseRight()
+        {
+            print("mouse 2");
         }
 
         void OnMove(Vector2 vec)
